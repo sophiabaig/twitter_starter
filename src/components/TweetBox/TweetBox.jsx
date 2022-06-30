@@ -2,27 +2,33 @@ import * as React from "react"
 import TweetInput from "./TweetInput"
 import "./TweetBox.css"
 
-export default function TweetBox({setTweets, userProfile}) {
+export default function TweetBox({setTweets, userProfile, tweetText = "", setTweetText}) {
+  const disabled = tweetText.length == 0 || tweetText.length > 140
+  const charactersLeft = 140 - tweetText.length
+  const handleOnTweetTextChange = (event) => {
+    setTweetText(event.target.value)
+  }
   const handleOnSubmit = () => {
     const newTweet = {
       name: userProfile.name,
       handle: userProfile.handle,
-      text: "",
+      text: tweetText,
       comments: 0,
       retweets: 0,
       likes: 0
     }
     setTweets((oldTweets) => [...oldTweets, { ...newTweet, id: oldTweets.length}]) // updating the tweets array to include the new tweet
+    setTweetText("")
   }
 
   return (
     <div className="tweet-box">
-      <TweetInput />
+       <TweetInput value={tweetText} handleOnChange={handleOnTweetTextChange}/>
 
       <div className="tweet-box-footer">
         <TweetBoxIcons />
-        <TweetCharacterCount />
-        <TweetSubmitButton handleOnSubmit={handleOnSubmit}/>
+        <TweetCharacterCount tweetText={tweetText} charactersLeft={charactersLeft}/>
+        <TweetSubmitButton handleOnSubmit={handleOnSubmit} disabled={disabled}/>
       </div>
     </div>
   )
@@ -39,16 +45,23 @@ export function TweetBoxIcons() {
   )
 }
 
-export function TweetCharacterCount(props) {
+export function TweetCharacterCount({tweetText, charactersLeft}) {
   // ADD CODE HERE
-  return <span></span>
+  var color = ""
+  if (tweetText.length > 140) {
+    color = "red"
+  }
+  if (tweetText.length == 0) {
+    charactersLeft = ""
+  }
+  return <span className={color}>{charactersLeft}</span>
 }
 
-export function TweetSubmitButton({handleOnSubmit}) {
+export function TweetSubmitButton({handleOnSubmit, disabled}) {
   return (
     <div className="tweet-submit">
       <i className="fas fa-plus-circle"></i>
-      <button className="tweet-submit-button" onClick={handleOnSubmit}>Tweet</button>
+      <button className="tweet-submit-button" onClick={handleOnSubmit} disabled={disabled}>Tweet</button>
     </div>
   )
 }
