@@ -14,7 +14,7 @@ export default function App() {
     <div className="app">
       <Navbar navLinks={navLinks} />
       <main>
-        <UserProfile userProfile={userProfile}/>
+        <UserProfile userProfile={userProfile} setUserProfile={setUserProfile}/>
         <Feed tweets={tweets} setTweets={setTweets} userProfile={userProfile}
            tweetText={tweetText} setTweetText={setTweetText} />
         <Advertisements />
